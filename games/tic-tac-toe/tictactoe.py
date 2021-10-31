@@ -3,8 +3,10 @@ import random
 
 def next_turn(row: int, column: int) -> None:
     global player
+    global empty_spaces
     if buttons[row][column]['text'] == "" and check_winner() is False:
         buttons[row][column]['text'] = player
+        empty_spaces = empty_spaces - 1
         result = check_winner()
         if result is True:
             label.config(text=(player + " wins!"))
@@ -18,6 +20,7 @@ def next_turn(row: int, column: int) -> None:
             label.config(text=(player + "'s turn"))
 
 def check_winner() -> bool | str:
+    global empty_spaces
     for row in range(3):
         if buttons[row][0]['text'] == buttons[row][1]['text'] == buttons[row][2]['text'] != "":
             buttons[row][0].config(bg="green")
@@ -40,7 +43,7 @@ def check_winner() -> bool | str:
         buttons[1][1].config(bg="green")
         buttons[0][2].config(bg="green")
         return True
-    elif empty_spaces() is False:
+    elif empty_spaces == 0:
         for row in range(3):
             for column in range(3):
                 buttons[row][column].config(bg="yellow")
@@ -48,16 +51,12 @@ def check_winner() -> bool | str:
     else:
         return False
 
-def empty_spaces() -> bool:
-    for row in range(3):
-        for column in range(3):
-            if buttons[row][column]['text'] == "":
-                return True
-    return False
-
 def new_game() -> None:
     global player
+    global empty_spaces
+
     player = random.choice(players)
+    empty_spaces = 9
     label.config(text = player + "'s turn")
     for row in range(3):
         for column in range(3):
@@ -70,6 +69,7 @@ player = random.choice(players)
 buttons = [[0,0,0],
         [0,0,0],
         [0,0,0]]
+empty_spaces = 9
 
 label = Label(text = player + "'s turn", font = ('consolas, 40'))
 label.pack(side = "top")
